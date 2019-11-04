@@ -28,9 +28,11 @@ app.use((req, res, next) => {
 app.use((req, res, next) => {
   const authentication = req.headers.authentication;
   if (authentication) {
-    const data = req.jwt.decode(authentication);
-    req.jwt.data = data;
+    const [bearer, token] = authentication.split(' ');
+
+    req.jwt.data = req.jwt.decode(token);
   }
+
   next();
 });
 
@@ -47,11 +49,9 @@ app.post('/authenticate', (req, res, next) => {
 });
 
 app.get('/verify', (req, res, next) => {
-  const { body } = req;
-
-  res.send('OK');
+  res.json(req.jwt.data);
 });
 
 app.listen(port, () => {
-  console.log(`listening on port ${port}`);
+  console.log(`Listening on port ${port}`);
 });
