@@ -1,0 +1,14 @@
+:baseUrl = http://localhost:3000
+
+# Authenticate
+POST :baseUrl/authenticate
+Content-Type: application/json
+
+{
+  "username": "admin",
+  "password": "thisShouldBeHashed"
+}
+
+# Verify
+GET :baseUrl/verify
+Authentication: "Bearer aoeu"

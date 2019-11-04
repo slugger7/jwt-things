@@ -1,0 +1,7 @@
+{
+  "authentication": {
+    "secret": "yourSuperSecurePrivateKeyHere",
+    "expiresIn": "1h"
+  },
+  "port": 3000
+}
