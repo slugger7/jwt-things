@@ -4,7 +4,8 @@
   "description": "a talk about the JWT",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start:01": "nodemon 01-simple.js",
+    "start:02": "nodemon 02-express.js"
   },
   "author": "",
   "license": "ISC",
@@ -16,5 +17,8 @@
     "helmet": "^3.21.2",
     "jsonwebtoken": "^8.5.1",
     "nedb": "^1.8.0"
+  },
+  "devDependencies": {
+    "nodemon": "^1.19.4"
   }
 }

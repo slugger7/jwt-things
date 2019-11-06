@@ -8,33 +8,25 @@ const jwt = require('jsonwebtoken');
 const { port, authentication: { secret, expiresIn } } = require('./config.json');
 const users = new datastore({ filename: 'users.db', autoload: true });
 
+const generateToken = data => jwt.sign(
+  data,
+  secret,
+  { expiresIn }
+);
+
+const verifyToken = token => new Promise((resolve, reject) => {
+  jwt.verify(token, secret, (err, decodedToken) => {
+    if (err) {
+      reject(err);
+    }
+    resolve(decodedToken);
+  });
+});
+
 const app = express();
 app.use(helmet());
 app.use(bodyParser.json());
 app.use(cors());
-app.use((req, res, next) => {
-  req.jwt = {
-    generate: data => jwt.sign(
-      data,
-      secret,
-      { expiresIn }
-    ),
-    decode: token => jwt.verify(token, secret)
-  };
-
-  next();
-});
-
-app.use((req, res, next) => {
-  const authentication = req.headers.authentication;
-  if (authentication) {
-    const [bearer, token] = authentication.split(' ');
-
-    req.jwt.data = req.jwt.decode(token);
-  }
-
-  next();
-});
 
 app.post('/authenticate', (req, res, next) => {
   const { body } = req;
@@ -43,13 +35,21 @@ app.post('/authenticate', (req, res, next) => {
       next(err);
     }
 
-    const token = req.jwt.generate({ id: user._id, username: user.username });
+    const token = generateToken({ id: user._id, username: user.username });
     res.json({ token: `Bearer ${token}`});
   });
 });
 
 app.get('/verify', (req, res, next) => {
-  res.json(req.jwt.data);
+  const [_, token] = req.headers.authentication.split(' ');
+
+  verifyToken(token)
+    .then(decodedToken => {
+      res.json(decodedToken);
+    })
+    .catch(err => {
+      res.status(401).send(err);
+    });
 });
 
 app.listen(port, () => {
