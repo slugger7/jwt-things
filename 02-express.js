@@ -8,19 +8,27 @@ const jwt = require('jsonwebtoken');
 const { port, authentication: { secret, expiresIn } } = require('./config.json');
 const users = new datastore({ filename: 'users.db', autoload: true });
 
+const extractToken = authenticationHeader => authenticationHeader.split(' ')[1];
+
 const generateToken = data => jwt.sign(
   data,
   secret,
-  { expiresIn }
+  { expiresIn: '1s' }
 );
 
-const verifyToken = token => new Promise((resolve, reject) => {
-  jwt.verify(token, secret, (err, decodedToken) => {
-    if (err) {
-      reject(err);
+const verifyToken = authenticationHeader => new Promise((resolve, reject) => {
+  const token = extractToken(authenticationHeader);
+  jwt.verify(
+    token,
+    secret,
+    (err, decodedToken) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(decodedToken);
+      }
     }
-    resolve(decodedToken);
-  });
+  );
 });
 
 const app = express();
@@ -31,8 +39,9 @@ app.use(cors());
 app.post('/authenticate', (req, res, next) => {
   const { body } = req;
   users.findOne(body, (err, user) => {
-    if (err) {
-      next(err);
+    if (err || !user) {
+      res.status(401).send(err ? err : { message: 'Incorrect username or password'});
+      return;
     }
 
     const token = generateToken({ id: user._id, username: user.username });
@@ -41,9 +50,8 @@ app.post('/authenticate', (req, res, next) => {
 });
 
 app.get('/verify', (req, res, next) => {
-  const [_, token] = req.headers.authentication.split(' ');
-
-  verifyToken(token)
+  const { authentication } = req.headers;
+  verifyToken(authentication)
     .then(decodedToken => {
       res.json(decodedToken);
     })
