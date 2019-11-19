@@ -40,7 +40,7 @@ const ProtectedRoute = ({ children, ...rest }) => (
     {...rest}
     render={
       ({location}) =>
-p        fakeAuth.isAuthenticated ?
+        fakeAuth.isAuthenticated ?
           (children) :
           <Redirect
               to={{
