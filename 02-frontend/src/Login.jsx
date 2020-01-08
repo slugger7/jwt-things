@@ -1,27 +1,18 @@
 import React from 'react';
-import { useHistory, useLocation } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 import { serializeError } from 'serialize-error';
-import { authenticateUser, verifyUser } from './authentication.js';
-import { useCookies } from 'react-cookie';
-
-const LoginPageWrapper = () => {
-  const history = useHistory();
-  const location = useLocation();
-  const [ cookies, setCookie ] = useCookies();
-
-  return (<LoginPage history={history} location={location} cookies={cookies} setCookie={setCookie} />);
-}
+import { withCookies } from 'react-cookie';
+import { authenticateUser } from './authentication.js';
 
 class LoginPage extends React.Component {
   constructor(props) {
     super(props);
-    const { location, history, cookies, setCookie } = props;
-    
+    const { location, history, setCookie } = props;
+
     this.state = {
       errMessage: null,
       from: (location.state || { from: { pathname: '/' }}).from,
       history,
-      cookies,
       setCookie,
       username: '',
       password: ''
@@ -35,7 +26,7 @@ class LoginPage extends React.Component {
   }
 
   handleSubmit(event) {
-    const { username, password, setCookie, cookies } = this.state;
+    const { username, password, setCookie } = this.state;
 
     this.setState({errMessage: null});
 
@@ -43,7 +34,6 @@ class LoginPage extends React.Component {
       .then(token => {
         this.setState({ token });
         setCookie('token', token, { httpOnly: true });
-        console.log('The token after setting it', cookies.token);
         this.state.history.replace(this.state.from);
       })
       .catch(err => {
@@ -74,4 +64,4 @@ class LoginPage extends React.Component {
   }
 }
 
-export default LoginPageWrapper;
+export default withRouter(withCookies(LoginPage));
