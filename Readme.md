@@ -9,3 +9,5 @@ Hopefully one day this could turn into a talk or discussion around authenticatio
 - https://auth0.com/docs/jwks
 - https://stackoverflow.com/questions/44133536/is-it-safe-to-store-a-jwt-in-localstorage-with-reactjs
 - https://stormpath.com/blog/where-to-store-your-jwts-cookies-vs-html5-web-storage
+- https://developer.mozilla.org/en-US/docs/Web/API/Document/cookie
+- https://humanwhocodes.com/blog/2009/05/12/cookies-and-security/

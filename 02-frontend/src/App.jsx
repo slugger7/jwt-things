@@ -7,23 +7,19 @@ import {
   Link,
   Redirect,
   useHistory,
-  useLocation
 } from 'react-router-dom';
+import LoginPage from './Login';
 
 const fakeAuth = {
   isAuthenticated: false,
-  authenticate(callback) {
-    fakeAuth.isAuthenticated = true;
-    setTimeout(callback, 100);
-  },
-  signout(callback) {
+  signOut(callback) {
     fakeAuth.isAuthenticated = false;
     setTimeout(callback, 100);
   }
 };
 
 const AuthButton = () => {
-  let history = useHistory();
+  const history = useHistory;
 
   return fakeAuth.isAuthenticated ? (
     <p>
@@ -39,52 +35,36 @@ const ProtectedRoute = ({ children, ...rest }) => (
   <Route
     {...rest}
     render={
-      ({location}) =>
+      (props) =>
         fakeAuth.isAuthenticated ?
           (children) :
           <Redirect
               to={{
                 pathname: "/login",
-                state: { from: location }
+                state: { from: props.location }
               }}
               />
           }
           />
 );
 
-const LoginPage = () => {
-  let history = useHistory();
-  let location = useLocation();
-
-  let { from } = location.state || { from: { pathname: '/'}};
-  let login = () => {
-    fakeAuth.authenticate(() => history.replace(from));
-  }
-
-  return (
-    <div>
-      <p>You must log in to view the page at {from.pathname}</p>
-      <button onClick={login}>Log in</button>
-    </div>
-  )
-}
-
 const PublicPage = () => (<h2>Public Page</h2>);
 const ProtectedPage = () => (<h2>Protected Page</h2>);
 
-const App = () => (
+const App = () => {
+  return (
   <Router>
-    <div>
+    <div class="container">
       <AuthButton />
 
-      <ul>
-        <li>
+      <nav class="level">
+        <p class="level-item">
           <Link to="/public">Public Page</Link>
-        </li>
-        <li>
+        </p>
+        <p class="level-item">
           <Link to="/protected">Protected Page</Link>
-        </li>
-      </ul>
+        </p>
+      </nav>
 
       <Switch>
         <Route path="/public">
@@ -99,7 +79,7 @@ const App = () => (
       </Switch>
     </div>
   </Router>
-);
+)};
 
 
 

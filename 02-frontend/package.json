@@ -3,10 +3,13 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "bulma": "^0.8.0",
     "react": "^16.11.0",
+    "react-cookie": "^4.0.3",
     "react-dom": "^16.11.0",
     "react-router-dom": "^5.1.2",
-    "react-scripts": "3.2.0",
+    "react-scripts": "^3.3.0",
+    "serialize-error": "^5.0.0",
     "superagent": "^5.1.0"
   },
   "scripts": {
