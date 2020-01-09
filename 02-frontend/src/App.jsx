@@ -10,24 +10,22 @@ import {
 } from 'react-router-dom';
 import LoginPage from './Login';
 
-const fakeAuth = {
-  isAuthenticated: false,
-  signOut(callback) {
-    fakeAuth.isAuthenticated = false;
-    setTimeout(callback, 100);
-  }
-};
-
 const AuthButton = () => {
-  const history = useHistory;
+  const history = useHistory();
+  const token = window.localStorage.getItem('token');
 
-  return fakeAuth.isAuthenticated ? (
+  const signOut = () => {
+    window.localStorage.clear();
+    history.push('/');
+  }
+
+  return token ? (
     <p>
-      Welcome!{" "}
-      <button onClick={() => fakeAuth.signOut(() => history.push('/'))}>Sign Out</button>
+      <span>Welcome {window.localStorage.getItem('username')} </span>
+      <button onClick={signOut}>Sign out</button>
     </p>
   ) : (
-    <p>You are not logged in</p>
+    <p>You are not signed in</p>
   );
 };
 
@@ -36,7 +34,7 @@ const ProtectedRoute = ({ children, ...rest }) => (
     {...rest}
     render={
       (props) =>
-        fakeAuth.isAuthenticated ?
+        localStorage.getItem('token') ?
           (children) :
           <Redirect
               to={{

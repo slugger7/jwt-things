@@ -1,19 +1,17 @@
 import React from 'react';
 import { withRouter } from 'react-router-dom';
 import { serializeError } from 'serialize-error';
-import { withCookies } from 'react-cookie';
-import { authenticateUser } from './authentication.js';
+import { authenticateUser, handleNewToken } from './authentication.js';
 
 class LoginPage extends React.Component {
   constructor(props) {
     super(props);
-    const { location, history, setCookie } = props;
+    const { location, history } = props;
 
     this.state = {
       errMessage: null,
       from: (location.state || { from: { pathname: '/' }}).from,
       history,
-      setCookie,
       username: '',
       password: ''
     };
@@ -26,20 +24,18 @@ class LoginPage extends React.Component {
   }
 
   handleSubmit(event) {
-    const { username, password, setCookie } = this.state;
+    const { username, password } = this.state;
 
     this.setState({errMessage: null});
 
     authenticateUser(username, password)
-      .then(token => {
-        this.setState({ token });
-        setCookie('token', token, { httpOnly: true });
-        this.state.history.replace(this.state.from);
-      })
+      .then(handleNewToken)
+      .then(() => this.state.history.replace(this.state.from))
       .catch(err => {
+        console.log('We encountered an error', err);
         const errObj = serializeError(err);
         this.setState({ errMessage: errObj.response.body.message });
-      })
+      });
     event.preventDefault();
   }
 
@@ -64,4 +60,4 @@ class LoginPage extends React.Component {
   }
 }
 
-export default withRouter(withCookies(LoginPage));
+export default withRouter(LoginPage);
