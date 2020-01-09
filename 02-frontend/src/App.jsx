@@ -4,53 +4,16 @@ import {
   BrowserRouter as Router,
   Switch,
   Route,
-  Link,
-  Redirect,
-  useHistory,
+  Link
 } from 'react-router-dom';
 import LoginPage from './Login';
-
-const AuthButton = () => {
-  const history = useHistory();
-  const token = window.localStorage.getItem('token');
-
-  const signOut = () => {
-    window.localStorage.clear();
-    history.push('/');
-  }
-
-  return token ? (
-    <p>
-      <span>Welcome {window.localStorage.getItem('username')} </span>
-      <button onClick={signOut}>Sign out</button>
-    </p>
-  ) : (
-    <p>You are not signed in</p>
-  );
-};
-
-const ProtectedRoute = ({ children, ...rest }) => (
-  <Route
-    {...rest}
-    render={
-      (props) =>
-        localStorage.getItem('token') ?
-          (children) :
-          <Redirect
-              to={{
-                pathname: "/login",
-                state: { from: props.location }
-              }}
-              />
-          }
-          />
-);
+import ProtectedRoute from './ProtectedRoute';
+import AuthButton from './AuthButton';
 
 const PublicPage = () => (<h2>Public Page</h2>);
 const ProtectedPage = () => (<h2>Protected Page</h2>);
 
-const App = () => {
-  return (
+const App = () => (
   <Router>
     <div class="container">
       <AuthButton />
@@ -77,7 +40,7 @@ const App = () => {
       </Switch>
     </div>
   </Router>
-)};
+);
 
 
 

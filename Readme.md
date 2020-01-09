@@ -21,3 +21,4 @@ If your API is a different server to your website server it would be better to s
 - https://stormpath.com/blog/where-to-store-your-jwts-cookies-vs-html5-web-storage
 - https://developer.mozilla.org/en-US/docs/Web/API/Document/cookie
 - https://humanwhocodes.com/blog/2009/05/12/cookies-and-security/
+- https://www.oauth.com/oauth2-servers/access-tokens/
