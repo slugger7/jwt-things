@@ -3,6 +3,13 @@
 Currently this is just a repository to play around with different concepts around JWT authentication.
 Hopefully one day this could turn into a talk or discussion around authentication around the JWT authentication method.
 
+# Refresh Token
+
+Refresh token has a reference in the DB that is checked where your normal token does not.
+Refresh tokens are long lived where normal tokens are not.
+The idea is that you automatically refresh the users short lived token and check then if the user still has access to what they should have access to via the database calls. They can then access the application for the next duration of the short lived token until it needs to be refreshed.
+This allows you to revoke access to a user but it will only take effect with the next refresh cycle when they do not have access any more.
+
 ## Where to store
 
 ### Cookies
@@ -22,3 +29,7 @@ If your API is a different server to your website server it would be better to s
 - https://developer.mozilla.org/en-US/docs/Web/API/Document/cookie
 - https://humanwhocodes.com/blog/2009/05/12/cookies-and-security/
 - https://www.oauth.com/oauth2-servers/access-tokens/
+- https://auth0.com/blog/refresh-tokens-what-are-they-and-when-to-use-them/
+- https://medium.com/google-cloud/understanding-oauth2-and-building-a-basic-authorization-server-of-your-own-a-beginners-guide-cf7451a16f66
+
+
