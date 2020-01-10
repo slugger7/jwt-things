@@ -1,5 +1,5 @@
 import React from 'react';
-import { api } from './api';
+import { api } from './services/api';
 
 class SecondProtectedPage extends React.Component {
   constructor(props) {
@@ -22,11 +22,13 @@ class SecondProtectedPage extends React.Component {
   }
 
   render() {
-    return (<div>
-      {this.state.busy && <span>spinner goes here</span>}
-    {!this.state.busy && this.state.verified && <span>Verified</span>}
-    {!this.state.busy && !this.state.verified && <span>Not Verified</span>}
-     </div>)
+    return (
+      <div>
+        {this.state.busy && <span>spinner goes here</span>}
+        {!this.state.busy && this.state.verified && <span>Verified</span>}
+        {!this.state.busy && !this.state.verified && <span>Not Verified</span>}
+      </div>
+    );
   }
 };
 

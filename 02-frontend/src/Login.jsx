@@ -1,7 +1,7 @@
 import React from 'react';
 import { withRouter } from 'react-router-dom';
 import { serializeError } from 'serialize-error';
-import { authenticateUser, handleNewToken } from './authentication.js';
+import { authenticateUser, handleNewToken } from './services/authentication.js';
 
 class LoginPage extends React.Component {
   constructor(props) {
